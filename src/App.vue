@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab">
       <div class="tab-item">
         <router-link to='/goods'>商品</router-link>
@@ -23,10 +23,28 @@
 
 <script type="text/ecmascript-6">
   import header from './components/header/header.vue'
+  import staticVal from './const'
   import router from './router'
   export default{
+    data () {
+      return {
+        seller: {}
+      }
+    },
     components: {
       'v-header': header
+    },
+    created () {
+      this.$http.get('/api/seller').then(response => {
+        response = response.body
+        if (response.status === staticVal.request_success) {
+          this.seller = response.data
+          console.log(this.seller)
+        }
+      }, response => {
+        // error callback
+        console.log('请求失败')
+      })
     }
   }
   router.push('/goods')
@@ -34,7 +52,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "common/stylus/mixin.styl"
+  @import "common/stylus/minxin.styl"
 
 
   #app
